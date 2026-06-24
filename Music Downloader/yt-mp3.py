@@ -1,15 +1,17 @@
 import yt_dlp
-from pathlib import Path
+import os 
 
-URL= "https://youtu.be/wAoq__SQpwk"
+URL= "Youtube Link"
 
+save_file = "your/file/path"
 
+os.makedirs(save_file, exist_ok = True)
 
 ydl_opts = {
     'format': 'bestaudio/best',
     'writethumbnail': True,
     'keepvideo': False,
-    'outtmpl': '%(title)s.%(ext)s', 
+    'outtmpl': os.path.join(save_file, '%(title)s.%(ext)s'), 
     'postprocessors': [
         {
             'key': 'FFmpegExtractAudio',
@@ -19,12 +21,10 @@ ydl_opts = {
         {
             'key': 'FFmpegMetadata', 
         },
-        # --- ADD THIS NEW BLOCK ---
         {
             'key': 'FFmpegThumbnailsConvertor',
-            'format': 'jpg',  # Converts the .webp to a standard .jpg
+            'format': 'jpg', 
         },
-        # --------------------------
         {
             'key': 'EmbedThumbnail', 
         }
@@ -32,5 +32,4 @@ ydl_opts = {
 }
 
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    song = ydl.download(URL)
-
+    song = ydl.download([URL])
